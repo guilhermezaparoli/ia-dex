@@ -2,6 +2,7 @@
 import { UsersRepository } from "@/repositories/users-repository.js"
 import { UserEmailAlreadyExistsError } from "./error/user-email-already-exists-error.js"
 import { User } from "@/generated/prisma/index.js"
+import * as argon2 from "argon2"
 
 interface RegisterUseCaseRequest {
     email: string
@@ -27,10 +28,12 @@ export class RegisterUseCase {
             throw new UserEmailAlreadyExistsError()
         }
 
+        const password_hash = await argon2.hash(password)
+
         const user = await this.usersRepository.create({
             email,
             name,
-            password_hash: password
+            password_hash
         })
 
         return {

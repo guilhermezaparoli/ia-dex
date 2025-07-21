@@ -4,6 +4,7 @@ import { RegisterUseCase } from "./register.js";
 import { faker } from "@faker-js/faker"
 import { InMemoryUsersRepository } from "@/repositories/inMemoryRepositories/in-memory-users-repository.js";
 import { UserEmailAlreadyExistsError } from "./error/user-email-already-exists-error.js";
+import * as argon2 from "argon2"
 
 
 
@@ -48,5 +49,21 @@ describe("Register Use Case", async () => {
             name,
             password
         })).rejects.instanceOf(UserEmailAlreadyExistsError)
+    })
+
+    it("should create a password hash at register", async () => {
+        const email = faker.internet.email()
+        const name = faker.person.firstName()
+        const password = faker.internet.password()
+
+       const {user} = await sut.execute({
+            email,
+            name,
+            password
+        })
+
+        const passwordIsValidHash = await argon2.verify(user.password_hash, password)
+
+        expect(passwordIsValidHash).toBe(true)
     })
 })
