@@ -9,7 +9,7 @@ interface CreateTypeResponse {
     type: Type
 }
 
-export class CreateType {
+export class CreateTypeUseCase {
     constructor(private typesRepository: TypesRepository) { }
 
     async execute({ name }: CreateTypeRequest): Promise<CreateTypeResponse> {
