@@ -15,28 +15,38 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(uuid())
-  email         String   @unique
+  id            String    @id @default(uuid())
+  email         String    @unique
   name          String
   password_hash String
-  created_at    DateTime @default(now())
+  created_at    DateTime  @default(now())
+  Monster       Monster[]
 
   @@map("users")
 }
 
-// model creature {
-//   id         Int      @id @default(autoincrement())
-//   name       String
-//   history    String
-//   image      String
-//   created_at DateTime @default(now())
+model Monster {
+  id         Int      @id @default(autoincrement())
+  name       String
+  history    String
+  image      String
+  created_at DateTime @default(now())
 
-//   @@map("creatures")
-// }
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id String
 
-// model type {
-//   id   Int    @id @default(autoincrement())
-//   name String
+  type    Type @relation(fields: [type_id], references: [id])
+  type_id Int
 
-//   @@map("types")
-// }
+  @@index([user_id, type_id])
+  @@map("monsters")
+}
+
+model Type {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  Monster Monster[]
+
+  @@map("types")
+}

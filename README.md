@@ -2,8 +2,8 @@
 
 
 #### Requisitos funcionais
-[ ]- O usuário deve ser capaz de se cadastrar 
-[ ]- O usuário deve ser capaz de se autenticar
+[x]- O usuário deve ser capaz de se cadastrar 
+[x]- O usuário deve ser capaz de se autenticar
 [ ]- o usuário deve ser capaz de recuperar sua senha
 [ ]- o usuário deve ser capaz de trocar sua senha
 [ ]- o usuário deve ser capaz de buscar seus próprios dados
