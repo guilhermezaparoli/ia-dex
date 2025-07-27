@@ -18,7 +18,7 @@ describe("Create Monster Use Case", () => {
     })
 
     it('should be able to create a new monster', async () => {
-        const monsterToCreate = {
+        const monsterData = {
             name: faker.animal.insect(),
             history: faker.lorem.text(),
             image: faker.image.url(),
@@ -27,15 +27,23 @@ describe("Create Monster Use Case", () => {
             user_id: randomUUID()
         }
 
-        const { monster } = await sut.execute(monsterToCreate)
+        const { monster } = await sut.execute(monsterData)
 
 
-        expect(monster.name).toBe(monsterToCreate.name)
+        expect(monster).toEqual(expect.objectContaining({
+            id: expect.any(Number),
+            name: monsterData.name,
+            history: monsterData.history,
+            image: monsterData.image,
+            type_id: monsterData.type_id,
+            user_id: monsterData.user_id,
+        }))
     })
-    
+
     it('should not be able to create a monster with same name', async () => {
-        const monsterToCreate = {
-            name: faker.animal.insect(),
+        const duplicateName = 'Gargoyle'
+        const monsterData = {
+            name: duplicateName,
             history: faker.lorem.text(),
             image: faker.image.url(),
             created_at: new Date(),
@@ -43,10 +51,14 @@ describe("Create Monster Use Case", () => {
             user_id: randomUUID()
         }
 
-      await sut.execute(monsterToCreate)
+        await sut.execute(monsterData)
 
 
-        expect(() => sut.execute(monsterToCreate)).rejects.instanceOf(MonsterNameAlreadyExistsError)
+        expect(() => sut.execute({
+            ...monsterData,
+            history: "A different story",
+            user_id: randomUUID()
+        })).rejects.instanceOf(MonsterNameAlreadyExistsError)
     })
 
 })
