@@ -27,7 +27,7 @@ model User {
 
 model Monster {
   id         Int      @id @default(autoincrement())
-  name       String
+  name       String   @unique
   history    String
   image      String
   created_at DateTime @default(now())
