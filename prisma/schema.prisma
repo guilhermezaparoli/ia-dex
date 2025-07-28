@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  output   = "./generated/prisma"
 }
 
 datasource db {
@@ -26,11 +26,12 @@ model User {
 }
 
 model Monster {
-  id         Int      @id @default(autoincrement())
-  name       String   @unique
-  history    String
-  image      String
-  created_at DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String
+  story       String
+  image       String
+  created_at  DateTime @default(now())
 
   user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id String
