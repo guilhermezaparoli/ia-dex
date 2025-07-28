@@ -7,13 +7,14 @@ export class InMemoryMonsterRepository
     public items: Monster[] = []
     private nexId = 1;
 
-    async create({ history, image, name, type_id, user_id, id }: Prisma.MonsterUncheckedCreateInput) {
+    async create({ story, image, name, type_id, user_id, id, description }: Prisma.MonsterUncheckedCreateInput) {
 
         const monster: Monster = {
             id: id ?? this.nexId,
             name,
-            history,
+            story,
             image,
+            description,
             type_id,
             user_id,
             created_at: new Date()

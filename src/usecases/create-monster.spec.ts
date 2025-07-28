@@ -1,27 +1,31 @@
-import { MonsterRepository } from "@/repositories/monsters-repository.js";
-import { beforeEach, describe, expect, it } from "vitest";
-import { CreateMonsterUseCase } from "./create-monster.js";
 import { InMemoryMonsterRepository } from "@/repositories/inMemoryRepositories/in-memory-monster-repository.js";
-import { Monster } from "@/generated/prisma/index.js";
+import { MonsterRepository } from "@/repositories/monsters-repository.js";
+import { ImageGeneratorService } from "@/services/image-generator-service.js";
+import { InMeMoryImageGenerator } from "@/services/in-memory-image-generator.js";
 import { faker } from "@faker-js/faker";
 import { randomUUID } from "node:crypto";
+import { beforeEach, describe, expect, it } from "vitest";
+import { CreateMonsterUseCase } from "./create-monster.js";
 import { MonsterNameAlreadyExistsError } from "./error/monster-name-already-exists-error-copy.js";
 
 
 let monsterRepository: MonsterRepository
+let imageGeneratorService: ImageGeneratorService
 let sut: CreateMonsterUseCase
 
 describe("Create Monster Use Case", () => {
     beforeEach(() => {
         monsterRepository = new InMemoryMonsterRepository()
-        sut = new CreateMonsterUseCase(monsterRepository)
+        imageGeneratorService = new InMeMoryImageGenerator()
+        sut = new CreateMonsterUseCase(monsterRepository, imageGeneratorService)
     })
 
     it('should be able to create a new monster', async () => {
         const monsterData = {
             name: faker.animal.insect(),
-            history: faker.lorem.text(),
-            image: faker.image.url(),
+            story: faker.lorem.text(),
+            image: 'url',
+            description: faker.lorem.text(),
             created_at: new Date(),
             type_id: 12,
             user_id: randomUUID()
@@ -33,7 +37,7 @@ describe("Create Monster Use Case", () => {
         expect(monster).toEqual(expect.objectContaining({
             id: expect.any(Number),
             name: monsterData.name,
-            history: monsterData.history,
+            story: monsterData.story,
             image: monsterData.image,
             type_id: monsterData.type_id,
             user_id: monsterData.user_id,
@@ -44,8 +48,9 @@ describe("Create Monster Use Case", () => {
         const duplicateName = 'Gargoyle'
         const monsterData = {
             name: duplicateName,
-            history: faker.lorem.text(),
-            image: faker.image.url(),
+            story: faker.lorem.text(),
+            description: faker.lorem.paragraph(),
+            image: 'url',
             created_at: new Date(),
             type_id: 12,
             user_id: randomUUID()
@@ -54,9 +59,9 @@ describe("Create Monster Use Case", () => {
         await sut.execute(monsterData)
 
 
-        expect(() => sut.execute({
+       await expect(() => sut.execute({
             ...monsterData,
-            history: "A different story",
+            story: "A different story",
             user_id: randomUUID()
         })).rejects.instanceOf(MonsterNameAlreadyExistsError)
     })
