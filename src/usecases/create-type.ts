@@ -1,6 +1,7 @@
-import { Type } from "@/generated/prisma/index.js";
+
 import { TypesRepository } from "@/repositories/types-repository.js";
 import { TypeNameAlreadyExistsError } from "./error/type-name-already-exists-error.js";
+import { Type } from "prisma/generated/prisma/index.js";
 
 interface CreateTypeRequest {
     name: string

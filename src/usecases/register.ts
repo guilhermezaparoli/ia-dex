@@ -1,8 +1,9 @@
 
 import { UsersRepository } from "@/repositories/users-repository.js"
 import { UserEmailAlreadyExistsError } from "./error/user-email-already-exists-error.js"
-import { User } from "@/generated/prisma/index.js"
+
 import * as argon2 from "argon2"
+import { User } from "prisma/generated/prisma/index.js"
 
 interface RegisterUseCaseRequest {
     email: string

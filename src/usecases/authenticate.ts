@@ -1,7 +1,8 @@
 import { UsersRepository } from "@/repositories/users-repository.js";
 import { InvalidCredentialsError } from "./error/invalid-credentials-error.js";
 import * as argon2 from "argon2"
-import { User } from "@/generated/prisma/index.js";
+import { User } from "prisma/generated/prisma/index.js";
+
 
 interface AuthenticateUseCaseRequest {
     email: string
