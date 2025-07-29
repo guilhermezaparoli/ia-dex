@@ -8,7 +8,7 @@
     "node": "20.11.0"
   },
   "scripts": {
-    "start:dev": "tsx watch src/http/server.ts",
+    "start:dev": "tsx watch src/server.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
