@@ -1,5 +1,5 @@
 export class TypeNameAlreadyExistsError extends Error{
     constructor() {
-        super('Type name aready exists!')
+        super('Type name already exists!')
     }
 }
