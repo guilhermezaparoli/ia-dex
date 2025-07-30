@@ -1,4 +1,4 @@
-import { Monster, Prisma } from "@/generated/prisma/index.js";
+import { Monster, Prisma } from "prisma/generated/prisma/index.js"
 
 export interface MonsterRepository {
     create(data: Prisma.MonsterUncheckedCreateInput): Promise<Monster>
