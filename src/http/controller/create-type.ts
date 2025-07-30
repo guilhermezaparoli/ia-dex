@@ -1,4 +1,4 @@
-import { makeCreateType } from "@/usecases/factories/make-create-type.js";
+import { makeCreateTypeUseCase } from "@/usecases/factories/make-create-type.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 
@@ -11,7 +11,7 @@ export async function createType(req: FastifyRequest, res: FastifyReply) {
 
     const { name } = createTypeSchema.parse(req.body)
 
-    const createTypeUseCase = makeCreateType()
+    const createTypeUseCase = makeCreateTypeUseCase()
 
     const { type } = await createTypeUseCase.execute({ name })
 
