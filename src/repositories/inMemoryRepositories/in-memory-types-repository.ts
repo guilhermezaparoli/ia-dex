@@ -1,10 +1,11 @@
-import { Prisma, Type } from "@/generated/prisma/index.js";
+
 import { TypesRepository } from "../types-repository.js";
+import { Prisma, Type } from "prisma/generated/prisma/index.js";
 
-export class InMemoryTypesRepository
 
-    implements TypesRepository {
-    public items: Map<number, Type> = new Map()
+export class InMemoryTypesRepository implements TypesRepository {
+
+    public items: Map<number, any> = new Map()
     private nexId = 1;
 
     async findByName(name: string): Promise<Type | null> {
@@ -27,5 +28,11 @@ export class InMemoryTypesRepository
         this.nexId++
 
         return newType
+    }
+
+    async findMany() {
+        const allTypes = Array.from(this.items.values())
+
+        return allTypes
     }
 }
