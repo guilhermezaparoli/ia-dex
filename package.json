@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@fastify/jwt": "9.1.0",
+    "@fastify/rate-limit": "10.3.0",
     "@prisma/client": "6.12.0",
     "argon2": "0.43.1",
     "dotenv": "^17.2.0",

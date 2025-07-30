@@ -3,10 +3,16 @@ import { AppRoutes } from "./http/routes.js";
 import { env } from "./env/index.js";
 import { ZodError } from "zod";
 import fastifyJwt from "@fastify/jwt";
+import fastifyRateLimit from "@fastify/rate-limit";
 
 
 export const app = fastify()
 
+
+app.register(fastifyRateLimit, {
+    max: 40,
+    timeWindow: 1000 * 60
+})
 app.register(fastifyJwt, {
     secret: env.JWT_SECRET
 })
