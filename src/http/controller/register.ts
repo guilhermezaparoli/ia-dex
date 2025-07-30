@@ -14,14 +14,20 @@ export async function register(req: FastifyRequest, res: FastifyReply) {
     const { email, name, password } = registerSchema.parse(req.body)
     const registerUseCase = makeRegisterUseCase()
 
-   const { user } = await registerUseCase.execute({
+    const { user } = await registerUseCase.execute({
         email,
         name,
         password
     })
 
+    const token = await res.jwtSign({}, {
+        sign: {
+            sub: user.id
+        }
+    })
+
     return res.status(200).send({
-        user
+        token
     })
 
 }
