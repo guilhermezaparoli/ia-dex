@@ -1,5 +1,7 @@
-import { Monster, Prisma } from "@/generated/prisma/index.js";
-import { MonsterRepository } from "../monsters-repository.js";
+
+import { Monster, Prisma } from "prisma/generated/prisma/index.js";
+import { FindManyParams, MonsterRepository } from "../monsters-repository.js";
+
 
 export class InMemoryMonsterRepository
 
@@ -35,5 +37,19 @@ export class InMemoryMonsterRepository
         }
 
         return monster
+    }
+
+    async findMany({ page, pageSize, typeId }: FindManyParams) {
+        let monstersToFilter = this.items
+
+        if (typeId) {
+            monstersToFilter = monstersToFilter.filter((item) => item.type_id === typeId)
+        }
+        const startIndex = (page - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+
+        const paginatedMonster = monstersToFilter.slice(startIndex, endIndex)
+
+        return paginatedMonster
     }
 }
