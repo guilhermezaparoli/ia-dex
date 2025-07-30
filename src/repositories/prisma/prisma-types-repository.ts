@@ -23,4 +23,10 @@ export class PrismaTypesRepository implements TypesRepository {
         return type
 
     }
+
+    async findMany(): Promise<Type[]> {
+        const types = await prisma.type.findMany()
+
+        return types
+    }
 }
