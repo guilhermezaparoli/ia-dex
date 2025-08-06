@@ -26,7 +26,7 @@ export async function register(req: FastifyRequest, res: FastifyReply) {
         }
     })
 
-    return res.status(200).send({
+    return res.status(201).send({
         token
     })
 
