@@ -6,6 +6,7 @@ import { verifyJWT } from "./middlewares/verify-jwt.js";
 import { createMonster } from "./controller/create-monsters.js";
 import { createType } from "./controller/create-type.js";
 import { fetchTypes } from "./controller/fetch-types.js";
+import { fetchMonsters } from "./controller/fetch-monsters.js";
 
 
 export function AppRoutes(app: FastifyInstance) {
@@ -14,6 +15,7 @@ export function AppRoutes(app: FastifyInstance) {
     app.post("/register", register)
     app.post("/auth", authenticate)
     app.get("/types", fetchTypes)
+    app.get("/monsters", fetchMonsters)
 
     app.post("/monsters/create", {
         onRequest: [verifyJWT]

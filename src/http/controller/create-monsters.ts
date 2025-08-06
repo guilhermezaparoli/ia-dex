@@ -1,3 +1,5 @@
+import { ImageGenerationFailedError } from "@/usecases/error/ImageGenerationFailedError.js";
+import { MonsterNameAlreadyExistsError } from "@/usecases/error/monster-name-already-exists-error-copy.js";
 import { makeCreateMonsterUseCase } from "@/usecases/factories/make-create-monster.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
@@ -11,19 +13,30 @@ export async function createMonster(req: FastifyRequest, res: FastifyReply) {
         type_id: z.number()
     })
 
-    const { name, description, story, type_id } = createMonsterSchema.parse(req.body)
 
 
-    const createMonsterUserCase = makeCreateMonsterUseCase()
+
+    try {
+        const { name, description, story, type_id } = createMonsterSchema.parse(req.body)
+        const createMonsterUserCase = makeCreateMonsterUseCase()
+        const createdMonster = await createMonsterUserCase.execute({
+            name,
+            description,
+            story,
+            type_id,
+            user_id: req.user.sub
+        })
+
+        res.status(201).send(createdMonster)
+    } catch (error) {
+        if (error instanceof MonsterNameAlreadyExistsError) {
+            return res.status(409).send({ message: error.message })
+        }
 
 
-    const createdMonster = await createMonsterUserCase.execute({
-        name,
-        description,
-        story,
-        type_id,
-        user_id: req.user.sub
-    })
+        if (error instanceof ImageGenerationFailedError) {
+            return res.status(503).send({ message: error.message })
+        }
+    }
 
-    res.send(createdMonster)
 }

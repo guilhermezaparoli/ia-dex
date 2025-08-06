@@ -15,7 +15,7 @@ export async function createType(req: FastifyRequest, res: FastifyReply) {
 
     const { type } = await createTypeUseCase.execute({ name })
 
-    return {
+    res.status(201).send({
         type
-    }
+    })
 }
