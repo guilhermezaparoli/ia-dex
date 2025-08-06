@@ -3,6 +3,7 @@ import { MonsterRepository } from "@/repositories/monsters-repository.js";
 import { MonsterNameAlreadyExistsError } from "./error/monster-name-already-exists-error-copy.js";
 import { ImageGeneratorService } from "@/services/image-generator-service.js";
 import { Monster } from "prisma/generated/prisma/index.js";
+import { ImageGenerationFailedError } from "./error/ImageGenerationFailedError.js";
 
 
 interface CreateMonsterUseCaseRequest {
@@ -38,9 +39,17 @@ export class CreateMonsterUseCase {
         const imagePrompt = `A monster named ${name}. ${description}. Digital art.`;
         const storyPrompt = `Write a short origin story in portuguese for a monster named ${name}, described as: "${description}".`;
 
-        const imageUrl = await this.imageGeneratorService.generateImage(imagePrompt)
+        let imageUrl: string;
+        try {
+            imageUrl = await this.imageGeneratorService.generateImage(imagePrompt);
+        } catch (error) {
+
+            console.error("Image Generation Service Error:", error);
+            throw new ImageGenerationFailedError();
+        }
 
         console.log(imageUrl);
+        
         const monster = await this.monstersRepository.create({
             story,
             description,
