@@ -30,8 +30,6 @@ describe("Fetch Monster Use Case", () => {
 
         }
 
-
-
         const { monsters } = await sut.execute({
             page: 2,
             pageSize: 10,

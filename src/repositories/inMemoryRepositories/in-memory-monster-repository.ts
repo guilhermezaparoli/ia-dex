@@ -49,7 +49,16 @@ export class InMemoryMonsterRepository
         const endIndex = startIndex + pageSize;
 
         const paginatedMonster = monstersToFilter.slice(startIndex, endIndex)
+        const totalItems = monstersToFilter.length
 
-        return paginatedMonster
+
+        return {
+            monsters: paginatedMonster,
+            pagination: {
+                page,
+                pageSize,
+                totalItems
+            }
+        }
     }
 }

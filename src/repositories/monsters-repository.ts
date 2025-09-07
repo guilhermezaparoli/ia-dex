@@ -6,6 +6,18 @@ export interface FindManyParams {
     pageSize: number
     typeId?: number
 }
+
+
+interface Pagination {
+    page: number;
+    pageSize: number;
+    totalItems: number;
+}
+export interface FindManyResult {
+    monsters: Monster[];
+    pagination: Pagination
+}
+
 export interface MonsterRepository {
     create(data: Prisma.MonsterUncheckedCreateInput): Promise<Monster>
     findByName(name: string): Promise<Monster | null>
@@ -13,5 +25,5 @@ export interface MonsterRepository {
         page,
         pageSize,
         typeId
-    }: FindManyParams): Promise<Monster[]>
+    }: FindManyParams): Promise<FindManyResult>
 }

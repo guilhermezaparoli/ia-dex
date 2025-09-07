@@ -4,10 +4,6 @@ import z from "zod";
 
 export async function fetchMonsters(req: FastifyRequest, res: FastifyReply) {
 
-
-
-
-
     const fetchMonsterSchema = z.object({
         page: z.coerce.number(),
         pageSize: z.coerce.number(),
@@ -17,10 +13,10 @@ export async function fetchMonsters(req: FastifyRequest, res: FastifyReply) {
 
     const { page, pageSize, typeId } = fetchMonsterSchema.parse(req.query)
     const fetchMonstersUseCase = makeFetchMonstersUseCase()
-    const { monsters } = await fetchMonstersUseCase.execute({ page, pageSize, typeId })
+    const monstersResult  = await fetchMonstersUseCase.execute({ page, pageSize, typeId })
     
     res.status(200).send({
-        monsters
+        ...monstersResult
     })
 
 }

@@ -36,7 +36,7 @@ export class CreateMonsterUseCase {
             throw new MonsterNameAlreadyExistsError()
         }
 
-        const imagePrompt = `A monster named ${name}. ${description}. Digital art.`;
+        const imagePrompt = `A monster named ${name}. ${description}. Masterpiece, award-winning digital art of a fantastical creature`;
         const storyPrompt = `Write a short origin story in portuguese for a monster named ${name}, described as: "${description}".`;
 
         let imageUrl: string;
