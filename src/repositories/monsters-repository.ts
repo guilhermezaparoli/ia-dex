@@ -26,4 +26,5 @@ export interface MonsterRepository {
         pageSize,
         typeId
     }: FindManyParams): Promise<FindManyResult>
+    findById(id: number): Promise<Monster | null>
 }

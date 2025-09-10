@@ -17,7 +17,6 @@ export class FetchMonsterUseCase {
             typeId
         })
 
-console.log(monsters);
         return monsters;
             
         

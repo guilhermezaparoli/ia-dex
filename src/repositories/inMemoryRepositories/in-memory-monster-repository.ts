@@ -61,4 +61,16 @@ export class InMemoryMonsterRepository
             }
         }
     }
+
+    async findById(id: number) {
+
+        const monster = this.items.find((monster) => monster.id === id)
+
+        if (!monster) {
+            return null
+        }
+
+        return monster
+
+    }
 }

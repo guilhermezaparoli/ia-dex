@@ -54,5 +54,23 @@ export class PrismaMonsterRepository implements MonsterRepository {
         };
     }
 
+    async findById(id: number): Promise<Monster | null> {
+        
+        const monster = await prisma.monster.findUnique({
+            where: {
+                id
+            },
+            include: {
+                user: {
+                    select: {
+                        name: true
+                    }
+                },
+            }
+        })
+        
+        return monster
+    }
+
 
 }
