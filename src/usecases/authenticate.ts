@@ -11,7 +11,6 @@ interface AuthenticateUseCaseRequest {
 
 interface AuthenticateUseCaseResponse {
     user: User
-    // token: string
 }
 
 export class AuthenticateUseCase {

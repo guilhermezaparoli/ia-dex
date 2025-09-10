@@ -1,11 +1,10 @@
+import { env } from "@/env/index.js";
 import { makeAuthenticateUseCase } from "@/usecases/factories/make-authenticate.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 
 export async function authenticate(req: FastifyRequest, res: FastifyReply) {
 
-
-    
     const authenticateSchema = z.object({
         email: z.string().email(),
         password: z.string().min(8),
@@ -26,8 +25,20 @@ export async function authenticate(req: FastifyRequest, res: FastifyReply) {
         }
     })
 
+    const refreshToken = await res.jwtSign({}, {
+        sign: {
+            sub: user.id,
+            expiresIn: '1d'
+        }
+    })
 
-    return res.status(200).send({
+    return res.setCookie("refreshToken", refreshToken, {
+        path: "/",
+        sameSite: env.NODE_ENV === "production",
+        httpOnly: true,
+        secure: true,
+        maxAge: 60 * 60 * 24
+    }).status(200).send({
         token
     })
 

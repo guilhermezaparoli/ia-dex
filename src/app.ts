@@ -5,18 +5,27 @@ import { ZodError } from "zod";
 import fastifyJwt from "@fastify/jwt";
 import fastifyRateLimit from "@fastify/rate-limit";
 import cors from "@fastify/cors"
+import fastifyCookie from "@fastify/cookie";
 
 
 export const app = fastify()
-
 
 app.register(fastifyRateLimit, {
     max: 40,
     timeWindow: 1000 * 60
 })
 app.register(fastifyJwt, {
-    secret: env.JWT_SECRET
+    secret: env.JWT_SECRET,
+    cookie: {
+        cookieName: 'refreshToken',
+        signed: false
+    },
+    sign: {
+        expiresIn: '10m'
+    }
+    
 })
+app.register(fastifyCookie)
 app.register(cors, {
     origin: "*"
 })
