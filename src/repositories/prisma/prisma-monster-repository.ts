@@ -35,6 +35,13 @@ export class PrismaMonsterRepository implements MonsterRepository {
             where: {
                 type_id: typeId ? typeId : undefined
             },
+            include: {
+                user: {
+                    select: {
+                        name: true
+                    }
+                }
+            }
         })
 
         const totalItems = await prisma.monster.count({

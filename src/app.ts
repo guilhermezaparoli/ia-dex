@@ -6,9 +6,12 @@ import fastifyJwt from "@fastify/jwt";
 import fastifyRateLimit from "@fastify/rate-limit";
 import cors from "@fastify/cors"
 import fastifyCookie from "@fastify/cookie";
+import multipart from "fastify-multipart"
 
 
 export const app = fastify()
+
+app.register(multipart)
 
 app.register(fastifyRateLimit, {
     max: 40,

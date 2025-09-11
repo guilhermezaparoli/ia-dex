@@ -13,6 +13,16 @@ interface Pagination {
     pageSize: number;
     totalItems: number;
 }
+
+interface User {
+    name: string;
+    id: string;
+    created_at: Date;
+    email:string;
+    password_hash: string;
+
+}
+
 export interface FindManyResult {
     monsters: Monster[];
     pagination: Pagination

@@ -4,6 +4,10 @@ import { MonsterNameAlreadyExistsError } from "./error/monster-name-already-exis
 import { ImageGeneratorService } from "@/services/image-generator-service.js";
 import { Monster } from "prisma/generated/prisma/index.js";
 import { ImageGenerationFailedError } from "./error/ImageGenerationFailedError.js";
+import { bucket } from "@/services/firebase/firebase.js";
+import cloudinary from "@/services/cloudinary/cloudinary.js";
+import { error } from "console";
+import { UploadCloudinaryError } from "./error/upload-cloudinary-error.js";
 
 
 interface CreateMonsterUseCaseRequest {
@@ -48,17 +52,35 @@ export class CreateMonsterUseCase {
             throw new ImageGenerationFailedError();
         }
 
-        console.log(imageUrl);
-        
+        const image = await fetch(imageUrl)
+        const buffer = Buffer.from(await image.arrayBuffer())
+
+
+        let publicUrl = '';
+
+
+        try {
+            const dataUri = `data:image/png;base64,${buffer.toString('base64')}`
+
+            const result = await cloudinary.uploader.upload(dataUri, {
+                folder: "monsters"
+            })
+
+            publicUrl = result.secure_url
+        } catch (error) {
+            throw new UploadCloudinaryError()
+        }
+
+
+
         const monster = await this.monstersRepository.create({
             story,
             description,
-            image: imageUrl,
+            image: publicUrl,
             name,
             type_id,
             user_id
         })
-
 
         return {
             monster
