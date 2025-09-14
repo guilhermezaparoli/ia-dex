@@ -29,9 +29,16 @@ model Monster {
   id          Int      @id @default(autoincrement())
   name        String   @unique
   description String
-  story       String
+  story       String?
   image       String
   created_at  DateTime @default(now())
+
+  hp              Int?
+  attack          Int?
+  defense         Int?
+  speed           Int?
+  special_attack  Int?
+  special_defense Int?
 
   user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id String

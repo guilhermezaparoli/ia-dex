@@ -1,11 +1,6 @@
 import OpenAI from "openai";
 import { ImageGeneratorService } from "./image-generator-service.js";
 
-
-
-
-
-
 export class OpenAIImageGeneratorService implements ImageGeneratorService {
     private openai: OpenAI
 

@@ -1,13 +1,12 @@
 
 import { MonsterRepository } from "@/repositories/monsters-repository.js";
-import { MonsterNameAlreadyExistsError } from "./error/monster-name-already-exists-error-copy.js";
-import { ImageGeneratorService } from "@/services/image-generator-service.js";
+import cloudinary from "@/services/cloudinary/cloudinary.js";
 import { Monster } from "prisma/generated/prisma/index.js";
 import { ImageGenerationFailedError } from "./error/ImageGenerationFailedError.js";
-import { bucket } from "@/services/firebase/firebase.js";
-import cloudinary from "@/services/cloudinary/cloudinary.js";
-import { error } from "console";
+import { MonsterNameAlreadyExistsError } from "./error/monster-name-already-exists-error-copy.js";
 import { UploadCloudinaryError } from "./error/upload-cloudinary-error.js";
+import { ImageGeneratorService } from "@/services/openIA/image-generator-service.js";
+import { StoryAndStatsGeneratorService } from "@/services/openIA/story-and-stats-generator.js";
 
 
 interface CreateMonsterUseCaseRequest {
@@ -26,7 +25,8 @@ export class CreateMonsterUseCase {
 
     constructor(
         private monstersRepository: MonsterRepository,
-        private imageGeneratorService: ImageGeneratorService
+        private imageGeneratorService: ImageGeneratorService,
+        private storyAndStatusGeneratorService: StoryAndStatsGeneratorService
     ) { }
 
 
@@ -40,7 +40,13 @@ export class CreateMonsterUseCase {
             throw new MonsterNameAlreadyExistsError()
         }
 
-        const imagePrompt = `A monster named ${name}. ${description}. Masterpiece, award-winning digital art of a fantastical creature`;
+        const imagePrompt = `
+        A detailed digital painting of a monster named ${name}.
+        ${description}.
+        High-quality fantasy creature concept art.
+        Do not include text, letters, numbers, or watermarks in the image.
+        Focus only on the creature and its environment.
+        `;
         const storyPrompt = `Write a short origin story in portuguese for a monster named ${name}, described as: "${description}".`;
 
         let imageUrl: string;
@@ -72,12 +78,30 @@ export class CreateMonsterUseCase {
         }
 
 
+        let generatedStory = '';
+        let generetedStats = null;
+        try {
+
+            const result = await this.storyAndStatusGeneratorService.generateStoryAndStats(storyPrompt)
+
+            generatedStory = result.story
+            generetedStats = result.stats
+        } catch (error) {
+
+        }
+
 
         const monster = await this.monstersRepository.create({
-            story,
+            story: generatedStory,
             description,
             image: publicUrl,
             name,
+            hp: generetedStats?.hp,
+            attack: generetedStats?.attack,
+            defense: generetedStats?.defense,
+            speed: generetedStats?.speed,
+            special_attack: generetedStats?.special_attack,
+            special_defense: generetedStats?.special_defense,
             type_id,
             user_id
         })
