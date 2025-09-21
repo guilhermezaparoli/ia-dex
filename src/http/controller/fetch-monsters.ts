@@ -15,6 +15,7 @@ export async function fetchMonsters(req: FastifyRequest, res: FastifyReply) {
     const fetchMonstersUseCase = makeFetchMonstersUseCase()
     const monstersResult  = await fetchMonstersUseCase.execute({ page, pageSize, typeId })
     
+    
     res.status(200).send({
         ...monstersResult
     })

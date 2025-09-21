@@ -1,12 +1,13 @@
 import { InMemoryMonsterRepository } from "@/repositories/inMemoryRepositories/in-memory-monster-repository.js";
 import { MonsterRepository } from "@/repositories/monsters-repository.js";
-import { ImageGeneratorService } from "@/services/image-generator-service.js";
-import { InMeMoryImageGenerator } from "@/services/in-memory-image-generator.js";
+
 import { faker } from "@faker-js/faker";
 import { randomUUID } from "node:crypto";
 import { beforeEach, describe, expect, it } from "vitest";
 import { CreateMonsterUseCase } from "./create-monster.js";
 import { MonsterNameAlreadyExistsError } from "./error/monster-name-already-exists-error-copy.js";
+import { ImageGeneratorService } from "@/services/openIA/image-generator-service.js";
+import { InMeMoryImageGenerator } from "@/services/openIA/in-memory-image-generator.js";
 
 
 let monsterRepository: MonsterRepository

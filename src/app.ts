@@ -30,7 +30,9 @@ app.register(fastifyJwt, {
 })
 app.register(fastifyCookie)
 app.register(cors, {
-    origin: "*"
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["PATCH"]
 })
 app.register(AppRoutes)
 

@@ -7,6 +7,7 @@ import { createType } from "./controller/create-type.js";
 import { fetchTypes } from "./controller/fetch-types.js";
 import { fetchMonsters } from "./controller/fetch-monsters.js";
 import { fetchMonsterById } from "./controller/fetch-monster-by-id.js";
+import { refresh } from "./controller/refresh.js";
 
 
 export function AppRoutes(app: FastifyInstance) {
@@ -24,4 +25,6 @@ export function AppRoutes(app: FastifyInstance) {
     app.post("/types/create", {
         onRequest: [verifyJWT]
     }, createType)
+
+    app.patch("/token/refresh", refresh)
 }

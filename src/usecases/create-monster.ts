@@ -1,7 +1,7 @@
 
 import { MonsterRepository } from "@/repositories/monsters-repository.js";
 import cloudinary from "@/services/cloudinary/cloudinary.js";
-import { Monster } from "prisma/generated/prisma/index.js";
+import { Monster, Types } from "prisma/generated/prisma/index.js";
 import { ImageGenerationFailedError } from "./error/ImageGenerationFailedError.js";
 import { MonsterNameAlreadyExistsError } from "./error/monster-name-already-exists-error-copy.js";
 import { UploadCloudinaryError } from "./error/upload-cloudinary-error.js";
@@ -14,7 +14,7 @@ interface CreateMonsterUseCaseRequest {
     description: string
     story: string
     user_id: string
-    type_id: number
+    types: Types[]
 }
 
 interface CreateMonsterUseCaseResponse {
@@ -30,7 +30,7 @@ export class CreateMonsterUseCase {
     ) { }
 
 
-    async execute({ story, name, type_id, user_id, description }: CreateMonsterUseCaseRequest): Promise<CreateMonsterUseCaseResponse> {
+    async execute({ story, name, types, user_id, description }: CreateMonsterUseCaseRequest): Promise<CreateMonsterUseCaseResponse> {
 
 
         const monsterAlreadyExists = await this.monstersRepository.findByName(name)
@@ -47,16 +47,14 @@ export class CreateMonsterUseCase {
         Do not include text, letters, numbers, or watermarks in the image.
         Focus only on the creature and its environment.
         `;
-        const storyPrompt = `Write a short origin story in portuguese for a monster named ${name}, described as: "${description}".`;
+        const storyPrompt = `Write a short origin story in portuguese for a monster named ${name}, types: ${types.toString()}, described as: "${description} and ${story}".`;
 
-        let imageUrl: string;
-        try {
-            imageUrl = await this.imageGeneratorService.generateImage(imagePrompt);
-        } catch (error) {
+      
+        const [imageUrl, storyAndStats] = await Promise.all([
+        this.imageGeneratorService.generateImage(imagePrompt),
+        this.storyAndStatusGeneratorService.generateStoryAndStats(storyPrompt)
+        ]);
 
-            console.error("Image Generation Service Error:", error);
-            throw new ImageGenerationFailedError();
-        }
 
         const image = await fetch(imageUrl)
         const buffer = Buffer.from(await image.arrayBuffer())
@@ -78,17 +76,8 @@ export class CreateMonsterUseCase {
         }
 
 
-        let generatedStory = '';
-        let generetedStats = null;
-        try {
+       const {stats: generatedStats, story: generatedStory} = storyAndStats 
 
-            const result = await this.storyAndStatusGeneratorService.generateStoryAndStats(storyPrompt)
-
-            generatedStory = result.story
-            generetedStats = result.stats
-        } catch (error) {
-
-        }
 
 
         const monster = await this.monstersRepository.create({
@@ -96,15 +85,16 @@ export class CreateMonsterUseCase {
             description,
             image: publicUrl,
             name,
-            hp: generetedStats?.hp,
-            attack: generetedStats?.attack,
-            defense: generetedStats?.defense,
-            speed: generetedStats?.speed,
-            special_attack: generetedStats?.special_attack,
-            special_defense: generetedStats?.special_defense,
-            type_id,
+            hp: generatedStats?.hp,
+            attack: generatedStats?.attack,
+            defense: generatedStats?.defense,
+            speed: generatedStats?.speed,
+            special_attack: generatedStats?.special_attack,
+            special_defense: generatedStats?.special_defense,
+            types,
             user_id
         })
+
 
         return {
             monster
