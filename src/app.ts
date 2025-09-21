@@ -7,6 +7,8 @@ import fastifyRateLimit from "@fastify/rate-limit";
 import cors from "@fastify/cors"
 import fastifyCookie from "@fastify/cookie";
 import multipart from "fastify-multipart"
+import { MonstersRoutes } from "./http/controller/monsters/routes.js";
+import { UsersRoutes } from "./http/controller/user/routes.js";
 
 
 export const app = fastify()
@@ -34,7 +36,9 @@ app.register(cors, {
     credentials: true,
     methods: ["PATCH"]
 })
-app.register(AppRoutes)
+
+app.register(MonstersRoutes)
+app.register(UsersRoutes)
 
 app.setErrorHandler((error, _, response) => {
     if (error instanceof ZodError) {
