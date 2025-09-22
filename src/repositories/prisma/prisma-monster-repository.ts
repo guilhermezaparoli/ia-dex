@@ -27,13 +27,12 @@ export class PrismaMonsterRepository implements MonsterRepository {
         return monster
     }
 
-    async findMany({ page, pageSize, typeId }: FindManyParams): Promise<FindManyResult> {
-
+    async findMany({ page, pageSize, types }: FindManyParams): Promise<FindManyResult> {
         const monsters = await prisma.monster.findMany({
             skip: (page - 1) * pageSize,
             take: pageSize,
             where: {
-                type_id: typeId ? typeId : undefined
+                ...(types && types.length > 0 ? { types: { hasEvery: types } } : {}),
             },
             include: {
                 user: {
@@ -46,7 +45,7 @@ export class PrismaMonsterRepository implements MonsterRepository {
 
         const totalItems = await prisma.monster.count({
             where: {
-                type_id: typeId ? typeId : undefined
+                ...(types && types.length > 0 ? { types: { hasEvery: types } } : {}),
             }
         })
 
@@ -62,7 +61,7 @@ export class PrismaMonsterRepository implements MonsterRepository {
     }
 
     async findById(id: number): Promise<Monster | null> {
-        
+
         const monster = await prisma.monster.findUnique({
             where: {
                 id
@@ -75,7 +74,7 @@ export class PrismaMonsterRepository implements MonsterRepository {
                 },
             }
         })
-        
+
         return monster
     }
 

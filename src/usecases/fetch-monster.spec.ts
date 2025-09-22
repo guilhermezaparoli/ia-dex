@@ -24,7 +24,6 @@ describe("Fetch Monster Use Case", () => {
                 description: "teste",
                 image: 'url',
                 story: 'teste',
-                type_id: 1,
                 user_id: randomUUID()
             })
 
@@ -32,7 +31,7 @@ describe("Fetch Monster Use Case", () => {
 
         const { monsters } = await sut.execute({
             page: 2,
-            pageSize: 10,
+            pageSize: 10
         })
 
         expect(monsters).toHaveLength(2)

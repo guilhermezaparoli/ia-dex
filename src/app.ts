@@ -1,12 +1,11 @@
-import fastify from "fastify";
-import { AppRoutes } from "./http/routes.js";
-import { env } from "./env/index.js";
-import { ZodError } from "zod";
+import fastifyCookie from "@fastify/cookie";
+import cors from "@fastify/cors";
 import fastifyJwt from "@fastify/jwt";
 import fastifyRateLimit from "@fastify/rate-limit";
-import cors from "@fastify/cors"
-import fastifyCookie from "@fastify/cookie";
-import multipart from "fastify-multipart"
+import fastify from "fastify";
+import multipart from "fastify-multipart";
+import { ZodError } from "zod";
+import { env } from "./env/index.js";
 import { MonstersRoutes } from "./http/controller/monsters/routes.js";
 import { UsersRoutes } from "./http/controller/user/routes.js";
 

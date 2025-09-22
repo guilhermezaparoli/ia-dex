@@ -1,10 +1,10 @@
-import { Monster, Prisma } from "prisma/generated/prisma/index.js"
+import { Monster, Prisma, Types } from "prisma/generated/prisma/index.js"
 
 
 export interface FindManyParams {
     page: number
     pageSize: number
-    typeId?: number
+    types?: Types[]
 }
 
 
@@ -34,7 +34,7 @@ export interface MonsterRepository {
     findMany({
         page,
         pageSize,
-        typeId
+        types
     }: FindManyParams): Promise<FindManyResult>
     findById(id: number): Promise<Monster | null>
 }

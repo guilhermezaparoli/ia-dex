@@ -1,8 +1,7 @@
 
-import { UsersRepository } from "../users-repository.js";
 import { randomUUID } from "node:crypto";
-import { ResourceNotFoundError } from "@/usecases/error/resource-not-found.js";
-import { Prisma, User } from "@/generated/prisma/index.js";
+import { UsersRepository } from "../users-repository.js";
+import { Prisma, User } from "prisma/generated/prisma/index.js";
 
 export class InMemoryUsersRepository implements UsersRepository {
     private users: User[] = []
