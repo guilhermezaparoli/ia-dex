@@ -5,6 +5,7 @@ export interface FindManyParams {
     page: number
     pageSize: number
     types?: Types[]
+    search?: string
 }
 
 
@@ -34,7 +35,8 @@ export interface MonsterRepository {
     findMany({
         page,
         pageSize,
-        types
+        types,
+        search
     }: FindManyParams): Promise<FindManyResult>
     findById(id: number): Promise<Monster | null>
 }

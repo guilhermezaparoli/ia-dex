@@ -5,18 +5,20 @@ interface FetchMonsterUseCaseRequest {
     page: number
     pageSize: number
     types?: Types[]
+    search?: string
 }
 
 export class FetchMonsterUseCase {
     constructor(private monsterRepository: MonsterRepository) { }
 
 
-    async execute({ page, pageSize, types }: FetchMonsterUseCaseRequest): Promise<FindManyResult> {
+    async execute({ page, pageSize, types, search }: FetchMonsterUseCaseRequest): Promise<FindManyResult> {
         
         const monsters = await this.monsterRepository.findMany({
             page,
             pageSize,
-            types
+            types,
+            search
         })
 
         return monsters;
