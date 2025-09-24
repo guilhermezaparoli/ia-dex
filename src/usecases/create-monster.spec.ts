@@ -8,17 +8,21 @@ import { CreateMonsterUseCase } from "./create-monster.js";
 import { MonsterNameAlreadyExistsError } from "./error/monster-name-already-exists-error-copy.js";
 import { ImageGeneratorService } from "@/services/openIA/image-generator-service.js";
 import { InMeMoryImageGenerator } from "@/services/openIA/in-memory-image-generator.js";
+import { StoryAndStatsGeneratorService } from "@/services/openIA/story-and-stats-generator.js";
+import { InMeMoryStoryAndStatsGenerator } from "@/services/openIA/in-memory-story-and-stats-generator.js";
 
 
 let monsterRepository: MonsterRepository
 let imageGeneratorService: ImageGeneratorService
+let storyAndStatusGeneratorService: StoryAndStatsGeneratorService
 let sut: CreateMonsterUseCase
 
 describe("Create Monster Use Case", () => {
     beforeEach(() => {
         monsterRepository = new InMemoryMonsterRepository()
         imageGeneratorService = new InMeMoryImageGenerator()
-        sut = new CreateMonsterUseCase(monsterRepository, imageGeneratorService)
+        storyAndStatusGeneratorService = new InMeMoryStoryAndStatsGenerator()
+        sut = new CreateMonsterUseCase(monsterRepository, imageGeneratorService, storyAndStatusGeneratorService)
     })
 
     it('should be able to create a new monster', async () => {
@@ -28,7 +32,7 @@ describe("Create Monster Use Case", () => {
             image: 'url',
             description: faker.lorem.text(),
             created_at: new Date(),
-            type_id: 12,
+            types: ["GRASS"],
             user_id: randomUUID()
         }
 
@@ -40,7 +44,6 @@ describe("Create Monster Use Case", () => {
             name: monsterData.name,
             story: monsterData.story,
             image: monsterData.image,
-            type_id: monsterData.type_id,
             user_id: monsterData.user_id,
         }))
     })
@@ -53,7 +56,7 @@ describe("Create Monster Use Case", () => {
             description: faker.lorem.paragraph(),
             image: 'url',
             created_at: new Date(),
-            type_id: 12,
+            types: [],
             user_id: randomUUID()
         }
 

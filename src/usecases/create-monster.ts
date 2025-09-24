@@ -47,7 +47,7 @@ export class CreateMonsterUseCase {
         Do not include text, letters, numbers, or watermarks in the image.
         Focus only on the creature and its environment.
         `;
-        const storyPrompt = `Write a short origin story in portuguese for a monster named ${name}, types: ${types.toString()}, described as: "${description} and ${story}".`;
+        const storyPrompt = `Write a short origin story in portuguese for a monster named ${name}, types: ${types?.toString()}, described as: "${description} and ${story}".`;
 
       
         const [imageUrl, storyAndStats] = await Promise.all([

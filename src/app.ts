@@ -7,7 +7,8 @@ import multipart from "fastify-multipart";
 import { ZodError } from "zod";
 import { env } from "./env/index.js";
 import { MonstersRoutes } from "./http/controller/monsters/routes.js";
-import { UsersRoutes } from "./http/controller/user/routes.js";
+import { UsersRoutes } from "./http/controller/users/routes.js";
+
 
 
 export const app = fastify()
