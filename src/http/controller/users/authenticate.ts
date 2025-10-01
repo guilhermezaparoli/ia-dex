@@ -1,3 +1,4 @@
+import { AUTHENTICATION_TIME } from "@/constants/authentication.js";
 import { env } from "@/env/index.js";
 import { makeAuthenticateUseCase } from "@/usecases/factories/make-authenticate.js";
 import { FastifyReply, FastifyRequest } from "fastify";
@@ -21,14 +22,15 @@ export async function authenticate(req: FastifyRequest, res: FastifyReply) {
 
     const token = await res.jwtSign({}, {
         sign: {
-            sub: user.id
+            sub: user.id,
+            expiresIn: AUTHENTICATION_TIME.TOKEN
         }
     })
 
     const refreshToken = await res.jwtSign({}, {
         sign: {
             sub: user.id,
-            expiresIn: '1d'
+            expiresIn: AUTHENTICATION_TIME.REFRESH_TOKEN
         }
     })
 
@@ -37,7 +39,7 @@ export async function authenticate(req: FastifyRequest, res: FastifyReply) {
         sameSite: env.NODE_ENV === "production",
         httpOnly: true,
         secure: true,
-        maxAge: 60 * 60 * 24
+        maxAge: AUTHENTICATION_TIME.REFRESH_TOKEN
     }).status(200).send({
         token
     })

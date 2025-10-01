@@ -1,3 +1,4 @@
+import { AUTHENTICATION_TIME } from "@/constants/authentication.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export async function refresh(req: FastifyRequest, res: FastifyReply) {
@@ -11,14 +12,14 @@ export async function refresh(req: FastifyRequest, res: FastifyReply) {
     const token = await res.jwtSign({}, {
         sign: {
             sub,
-            expiresIn: '10m'
+            expiresIn: AUTHENTICATION_TIME.TOKEN
         }
     })
     
     const refreshToken = await res.jwtSign({}, {
         sign: {
             sub,
-            expiresIn: '7d'
+            expiresIn: AUTHENTICATION_TIME.REFRESH_TOKEN
         }
     })
 
@@ -27,6 +28,7 @@ export async function refresh(req: FastifyRequest, res: FastifyReply) {
         secure: true,
         sameSite: "strict",
         httpOnly: true,
+        maxAge: AUTHENTICATION_TIME.REFRESH_TOKEN
     }).status(200).send({
         token
     })
