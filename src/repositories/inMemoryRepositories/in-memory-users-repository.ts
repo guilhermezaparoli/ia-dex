@@ -41,4 +41,16 @@ export class InMemoryUsersRepository implements UsersRepository {
 
         return user
     }
+
+    async updatePassword(userId: string, newPasswordHash: string): Promise<User> {
+        const userIndex = this.users.findIndex((user) => user.id === userId)
+
+        if (userIndex === -1) {
+            throw new Error('User not found')
+        }
+
+        this.users[userIndex].password_hash = newPasswordHash
+
+        return this.users[userIndex]
+    }
 }

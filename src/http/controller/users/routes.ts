@@ -4,6 +4,7 @@ import { register } from "./register.js"
 import { refresh } from "./refresh.js"
 import { fetchUser } from "./fetch-user.js"
 import { logout } from "./log-out.js"
+import { changePassword } from "./change-password.js"
 import { verifyJWT } from "@/http/middlewares/verify-jwt.js"
 
 export function UsersRoutes(app: FastifyInstance) {
@@ -15,6 +16,10 @@ export function UsersRoutes(app: FastifyInstance) {
         app.get('/me', {
                 onRequest: [verifyJWT]
         }, fetchUser)
+
+        app.patch('/change-password', {
+                onRequest: [verifyJWT]
+        }, changePassword)
 
         app.patch("/token/refresh", refresh)
 }
