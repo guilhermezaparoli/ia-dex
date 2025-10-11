@@ -8,6 +8,7 @@ import { ZodError } from "zod";
 import { env } from "./env/index.js";
 import { MonstersRoutes } from "./http/controller/monsters/routes.js";
 import { UsersRoutes } from "./http/controller/users/routes.js";
+import { AppError } from "./usecases/error/app-error.js";
 
 
 
@@ -48,6 +49,12 @@ app.setErrorHandler((error, _, response) => {
         })
     }
 
+    if (error instanceof AppError) {
+        return response.status(error.statusCode).send({
+            message: error.message
+        })
+    }
+
     if (env.NODE_ENV !== 'production') {
         console.error(error);
     } else {
@@ -55,6 +62,6 @@ app.setErrorHandler((error, _, response) => {
     }
 
     return response.status(500).send({
-        message: error.message
+        message: 'Internal server error'
     })
 })

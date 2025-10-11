@@ -1,6 +1,7 @@
-export class ResourceNotFoundError extends Error {
+import { AppError } from "./app-error.js";
 
-    constructor(){
-        super("Resource not found!")
+export class ResourceNotFoundError extends AppError {
+    constructor() {
+        super("Resource not found!", 404);
     }
 }
