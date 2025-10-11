@@ -89,5 +89,46 @@ export class PrismaMonsterRepository implements MonsterRepository {
         return monster
     }
 
+    async findByUserId(userId: string, { page, pageSize, types, search }: FindManyParams): Promise<FindManyResult> {
+        const monsters = await prisma.monster.findMany({
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+            where: {
+                user_id: userId,
+                ...(types && types.length > 0 ? { types: { hasEvery: types } } : {}),
+                name: {
+                    contains: search,
+                    mode: "insensitive"
+                }
+            },
+            include: {
+                user: {
+                    select: {
+                        name: true
+                    }
+                }
+            }
+        })
+
+        const totalItems = await prisma.monster.count({
+            where: {
+                user_id: userId,
+                ...(types && types.length > 0 ? { types: { hasEvery: types } } : {}),
+                name: {
+                    contains: search,
+                    mode: "insensitive"
+                }
+            }
+        })
+
+        return {
+            monsters,
+            pagination: {
+                totalItems,
+                page,
+                pageSize,
+            }
+        };
+    }
 
 }

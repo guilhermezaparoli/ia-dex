@@ -39,4 +39,5 @@ export interface MonsterRepository {
         search
     }: FindManyParams): Promise<FindManyResult>
     findById(id: number): Promise<Monster | null>
+    findByUserId(userId: string, params: FindManyParams): Promise<FindManyResult>
 }

@@ -79,4 +79,35 @@ export class InMemoryMonsterRepository
         return monster
 
     }
+
+    async findByUserId(userId: string, { page, pageSize, types, search }: FindManyParams) {
+        let monstersToFilter = this.items.filter((item) => item.user_id === userId)
+
+        if (types && types.length > 0) {
+            monstersToFilter = monstersToFilter.filter((item) =>
+                types.every((type) => item.types.includes(type))
+            )
+        }
+
+        if (search) {
+            monstersToFilter = monstersToFilter.filter((item) =>
+                item.name.toLowerCase().includes(search.toLowerCase())
+            )
+        }
+
+        const startIndex = (page - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+
+        const paginatedMonster = monstersToFilter.slice(startIndex, endIndex)
+        const totalItems = monstersToFilter.length
+
+        return {
+            monsters: paginatedMonster,
+            pagination: {
+                page,
+                pageSize,
+                totalItems
+            }
+        }
+    }
 }
