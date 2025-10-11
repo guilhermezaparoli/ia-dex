@@ -3,13 +3,24 @@ import { MonsterRepository } from "@/repositories/monsters-repository.js";
 
 import { faker } from "@faker-js/faker";
 import { randomUUID } from "node:crypto";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { CreateMonsterUseCase } from "./create-monster.js";
 import { MonsterNameAlreadyExistsError } from "./error/monster-name-already-exists-error-copy.js";
 import { ImageGeneratorService } from "@/services/openIA/image-generator-service.js";
 import { InMeMoryImageGenerator } from "@/services/openIA/in-memory-image-generator.js";
 import { StoryAndStatsGeneratorService } from "@/services/openIA/story-and-stats-generator.js";
 import { InMeMoryStoryAndStatsGenerator } from "@/services/openIA/in-memory-story-and-stats-generator.js";
+import { Types } from "prisma/generated/prisma/index.js";
+
+vi.mock('@/services/cloudinary/cloudinary.js', () => ({
+    default: {
+        uploader: {
+            upload: vi.fn().mockResolvedValue({
+                secure_url: 'https://example.com/mocked-image.png'
+            })
+        }
+    }
+}));
 
 
 let monsterRepository: MonsterRepository
@@ -29,10 +40,8 @@ describe("Create Monster Use Case", () => {
         const monsterData = {
             name: faker.animal.insect(),
             story: faker.lorem.text(),
-            image: 'url',
             description: faker.lorem.text(),
-            created_at: new Date(),
-            types: ["GRASS"],
+            types: [Types.GRASS],
             user_id: randomUUID()
         }
 
@@ -42,8 +51,8 @@ describe("Create Monster Use Case", () => {
         expect(monster).toEqual(expect.objectContaining({
             id: expect.any(Number),
             name: monsterData.name,
-            story: monsterData.story,
-            image: monsterData.image,
+            story: expect.any(String),
+            image: expect.any(String),
             user_id: monsterData.user_id,
         }))
     })
