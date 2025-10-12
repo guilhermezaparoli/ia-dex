@@ -1,5 +1,5 @@
 
-import { Monster, Prisma } from "prisma/generated/prisma/index.js";
+import { Monster, Prisma, Types } from "prisma/generated/prisma/index.js";
 import { FindManyParams, MonsterRepository } from "../monsters-repository.js";
 
 
@@ -11,19 +11,29 @@ export class InMemoryMonsterRepository
 
     async create({ story, image, name, types, user_id, id, description, attack, defense,hp, special_attack, special_defense, speed }: Prisma.MonsterUncheckedCreateInput) {
 
+      
+        let typesArray: Types[] = [];
+        if (types) {
+            if (Array.isArray(types)) {
+                typesArray = types;
+            } else if (typeof types === 'object' && 'set' in types) {
+                typesArray = types.set;
+            }
+        }
+
         const monster: Monster = {
             id: id ?? this.nexId,
             name,
-            story,
-            attack,
-            defense,
-            hp,
-            special_attack,
-            special_defense,
-            speed,
+            story: story ?? null,
+            attack: attack ?? null,
+            defense: defense ?? null,
+            hp: hp ?? null,
+            special_attack: special_attack ?? null,
+            special_defense: special_defense ?? null,
+            speed: speed ?? null,
             image,
             description,
-            types,
+            types: typesArray,
             user_id,
             created_at: new Date()
         }
@@ -45,11 +55,13 @@ export class InMemoryMonsterRepository
         return monster
     }
 
-    async findMany({ page, pageSize, typeId }: FindManyParams) {
+    async findMany({ page, pageSize, types }: FindManyParams) {
         let monstersToFilter = this.items
 
-        if (typeId) {
-            monstersToFilter = monstersToFilter.filter((item) => item.type_id === typeId)
+        if (types && types.length > 0) {
+            monstersToFilter = monstersToFilter.filter((item) =>
+                types.every((type) => item.types.includes(type))
+            )
         }
         const startIndex = (page - 1) * pageSize;
         const endIndex = startIndex + pageSize;
