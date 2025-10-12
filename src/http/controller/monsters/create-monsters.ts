@@ -19,6 +19,13 @@ export async function createMonster(req: FastifyRequest, res: FastifyReply) {
 
     try {
         const { name, description, story, types } = createMonsterSchema.parse(req.body)
+        
+        req.log.info({
+            name,
+            types,
+            user_id: req.user.sub
+        }, 'Creating monster');
+        
         const createMonsterUserCase = makeCreateMonsterUseCase()
         const { monster } = await createMonsterUserCase.execute({
             name,
@@ -28,18 +35,28 @@ export async function createMonster(req: FastifyRequest, res: FastifyReply) {
             user_id: req.user.sub
         })
 
+        req.log.info({
+            monster_id: monster.id,
+            name: monster.name
+        }, 'Monster created successfully');
+
         res.status(201).send({
             id: monster.id
         })
     } catch (error) {
         if (error instanceof MonsterNameAlreadyExistsError) {
+            req.log.warn({ error: error.message }, 'Monster name already exists');
             return res.status(409).send({ message: error.message })
         }
 
 
         if (error instanceof ImageGenerationFailedError) {
+            req.log.error({ error: error.message }, 'Image generation failed');
             return res.status(503).send({ message: error.message })
         }
+        
+        // Re-throw para o error handler global capturar
+        throw error;
     }
 
 }

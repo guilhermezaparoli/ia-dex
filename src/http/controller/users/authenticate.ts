@@ -13,12 +13,16 @@ export async function authenticate(req: FastifyRequest, res: FastifyReply) {
 
     const { email, password } = authenticateSchema.parse(req.body)
 
+    req.log.info({ email }, 'Authenticating user');
+
     const authenticateUseCase = makeAuthenticateUseCase()
 
     const { user } = await authenticateUseCase.execute({
         email,
         password
     })
+
+    req.log.info({ user_id: user.id, email: user.email }, 'User authenticated successfully');
 
     const token = await res.jwtSign({}, {
         sign: {
@@ -33,6 +37,8 @@ export async function authenticate(req: FastifyRequest, res: FastifyReply) {
             expiresIn: AUTHENTICATION_TIME.REFRESH_TOKEN
         }
     })
+
+    req.log.debug('JWT tokens generated');
 
     return res.setCookie("refreshToken", refreshToken, {
         path: "/",

@@ -12,7 +12,19 @@ import { AppError } from "./usecases/error/app-error.js";
 
 
 
-export const app = fastify()
+export const app = fastify({
+    logger: {
+        level: env.NODE_ENV === 'production' ? 'info' : 'debug',
+        transport: env.NODE_ENV !== 'production' ? {
+            target: 'pino-pretty',
+            options: {
+                colorize: true,
+                translateTime: 'HH:MM:ss Z',
+                ignore: 'pid,hostname'
+            }
+        } : undefined
+    }
+})
 
 app.register(multipart)
 
@@ -42,8 +54,14 @@ app.register(cors, {
 app.register(MonstersRoutes)
 app.register(UsersRoutes)
 
-app.setErrorHandler((error, _, response) => {
+app.setErrorHandler((error, request, response) => {
     if (error instanceof ZodError) {
+        app.log.warn({
+            err: error,
+            url: request.url,
+            method: request.method
+        }, 'Validation error');
+        
         return response.status(400).send({
             message: 'Validation error',
             issues: error.format()
@@ -51,16 +69,29 @@ app.setErrorHandler((error, _, response) => {
     }
 
     if (error instanceof AppError) {
+        app.log.warn({
+            err: error,
+            url: request.url,
+            method: request.method,
+            statusCode: error.statusCode
+        }, `AppError: ${error.message}`);
+        
         return response.status(error.statusCode).send({
             message: error.message
         })
     }
 
-    if (env.NODE_ENV !== 'production') {
-        console.error(error);
-    } else {
-        // TODO: Here we should log to an external tool like datadog/NewRelic/Sentry
-    }
+    // Log detalhado do erro 500
+    app.log.error({
+        err: error,
+        url: request.url,
+        method: request.method,
+        headers: request.headers,
+        body: request.body,
+        query: request.query,
+        params: request.params,
+        stack: error.stack
+    }, 'Internal server error - 500');
 
     return response.status(500).send({
         message: 'Internal server error'
