@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { FetchUserMonstersUseCase } from "./fetch-user-monsters.js";
 import { MonsterRepository } from "@/repositories/monsters-repository.js";
 import { InMemoryMonsterRepository } from "@/repositories/inMemoryRepositories/in-memory-monster-repository.js";
-import { Types } from "prisma/generated/prisma/index.js";
+import { Types } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 
 let monsterRepository: MonsterRepository;

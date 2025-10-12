@@ -10,7 +10,7 @@ import { ImageGeneratorService } from "@/services/openIA/image-generator-service
 import { InMeMoryImageGenerator } from "@/services/openIA/in-memory-image-generator.js";
 import { StoryAndStatsGeneratorService } from "@/services/openIA/story-and-stats-generator.js";
 import { InMeMoryStoryAndStatsGenerator } from "@/services/openIA/in-memory-story-and-stats-generator.js";
-import { Types } from "prisma/generated/prisma/index.js";
+import { Types } from "@prisma/client";
 
 vi.mock('@/services/cloudinary/cloudinary.js', () => ({
     default: {

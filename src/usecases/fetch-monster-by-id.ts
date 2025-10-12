@@ -1,5 +1,5 @@
 import { MonsterRepository } from "@/repositories/monsters-repository.js";
-import { Monster } from "prisma/generated/prisma/index.js";
+import { Monster } from "@prisma/client";
 import { ResourceNotFoundError } from "./error/resource-not-found-error.js";
 
 interface FetchMonsterResponse {

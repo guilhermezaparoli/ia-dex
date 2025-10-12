@@ -1,7 +1,7 @@
 
 import { randomUUID } from "node:crypto";
 import { UsersRepository } from "../users-repository.js";
-import { Prisma, User } from "prisma/generated/prisma/index.js";
+import { Prisma, User } from "@prisma/client";
 
 export class InMemoryUsersRepository implements UsersRepository {
     private users: User[] = []

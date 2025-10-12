@@ -2,7 +2,7 @@ import { ImageGenerationFailedError } from "@/usecases/error/ImageGenerationFail
 import { MonsterNameAlreadyExistsError } from "@/usecases/error/monster-name-already-exists-error-copy.js";
 import { makeCreateMonsterUseCase } from "@/usecases/factories/make-create-monster.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { Types } from "prisma/generated/prisma/index.js";
+import { Types } from "@prisma/client";
 import z from "zod";
 
 export async function createMonster(req: FastifyRequest, res: FastifyReply) {

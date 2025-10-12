@@ -1,5 +1,5 @@
 import { FindManyResult, MonsterRepository } from "@/repositories/monsters-repository.js";
-import { Types } from "prisma/generated/prisma/index.js";
+import { Types } from "@prisma/client";
 
 interface FetchUserMonstersUseCaseRequest {
     userId: string;

@@ -1,4 +1,4 @@
-import { Monster, Prisma, Types } from "prisma/generated/prisma/index.js"
+import { Monster, Prisma, Types } from "@prisma/client"
 
 
 export interface FindManyParams {

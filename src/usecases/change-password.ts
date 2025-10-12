@@ -2,7 +2,7 @@ import { UsersRepository } from "@/repositories/users-repository.js";
 import { ResourceNotFoundError } from "./error/resource-not-found-error.js";
 import { InvalidCredentialsError } from "./error/invalid-credentials-error.js";
 import * as argon2 from "argon2";
-import { User } from "prisma/generated/prisma/index.js";
+import { User } from "@prisma/client";
 
 interface ChangePasswordUseCaseRequest {
     userId: string;

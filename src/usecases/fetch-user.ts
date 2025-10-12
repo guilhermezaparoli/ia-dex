@@ -1,5 +1,5 @@
 import { UsersRepository } from "@/repositories/users-repository.js";
-import { User } from "prisma/generated/prisma/index.js";
+import { User } from "@prisma/client";
 import { ResourceNotFoundError } from "./error/resource-not-found-error.js";
 
 interface FetchUserUseCaseResponse {

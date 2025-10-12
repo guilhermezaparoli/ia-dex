@@ -1,7 +1,7 @@
 
 import { MonsterRepository } from "@/repositories/monsters-repository.js";
 import cloudinary from "@/services/cloudinary/cloudinary.js";
-import { Monster, Types } from "prisma/generated/prisma/index.js";
+import { Monster, Types } from "@prisma/client";
 import { ImageGenerationFailedError } from "./error/ImageGenerationFailedError.js";
 import { MonsterNameAlreadyExistsError } from "./error/monster-name-already-exists-error-copy.js";
 import { UploadCloudinaryError } from "./error/upload-cloudinary-error.js";

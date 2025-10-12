@@ -1,4 +1,4 @@
-import { Prisma, User } from "prisma/generated/prisma/index.js"
+import { Prisma, User } from "@prisma/client"
 
 
 

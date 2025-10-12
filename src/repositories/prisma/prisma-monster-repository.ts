@@ -1,6 +1,6 @@
 
 
-import { Monster, Prisma } from "prisma/generated/prisma/index.js";
+import { Monster, Prisma } from "@prisma/client";
 import { FindManyParams, FindManyResult, MonsterRepository } from "../monsters-repository.js";
 import { prisma } from "@/lib/prisma/index.js";
 

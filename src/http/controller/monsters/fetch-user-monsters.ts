@@ -1,6 +1,6 @@
 import { makeFetchUserMonsters } from "@/usecases/factories/make-fetch-user-monsters.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { Types } from "prisma/generated/prisma/index.js";
+import { Types } from "@prisma/client";
 import z from "zod";
 
 export async function fetchUserMonsters(req: FastifyRequest, res: FastifyReply) {
