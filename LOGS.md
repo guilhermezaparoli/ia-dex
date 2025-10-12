@@ -105,7 +105,13 @@ Com os logs implementados, você verá:
 ❌ Database connection failed: Error: Can't reach database server
 ```
 
-3. **Erro em requisição**:
+3. **Erro de tabelas não existem** (migrations não executadas):
+```
+The table `public.monsters` does not exist in the current database.
+```
+**Solução**: O script de build agora inclui `prisma migrate deploy` automaticamente.
+
+4. **Erro em requisição**:
 ```json
 {
   "level": "error",

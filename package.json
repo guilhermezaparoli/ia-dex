@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start:dev": "tsx watch src/server.ts",
-    "build": "prisma generate && tsc && tsc-alias",
+    "build": "prisma generate && prisma migrate deploy && tsc && tsc-alias",
     "start": "node ./dist/server.js",
     "test": "vitest run",
     "test:watch": "vitest",
