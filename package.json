@@ -9,10 +9,11 @@
   },
   "scripts": {
     "start:dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "start": "node ./dist/server.js",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -23,22 +24,22 @@
     "@fastify/jwt": "9.1.0",
     "@fastify/rate-limit": "10.3.0",
     "@prisma/client": "6.12.0",
+    "@types/node": "24.7.2",
     "argon2": "0.43.1",
     "cloudinary": "2.7.0",
     "dotenv": "^17.2.0",
     "fastify": "5.6.0",
     "fastify-multipart": "5.4.0",
     "openai": "5.10.2",
+    "prisma": "6.12.0",
+    "typescript": "^5.8.3",
     "vite-tsconfig-paths": "5.1.4",
     "zod": "3.25.76"
   },
   "devDependencies": {
     "@faker-js/faker": "9.9.0",
     "@types/fastify-multipart": "0.7.2",
-    "@types/node": "24.7.2",
-    "prisma": "6.12.0",
     "tsx": "^4.20.3",
-    "typescript": "^5.8.3",
     "vitest": "3.2.4"
   }
 }
