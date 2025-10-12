@@ -24,7 +24,6 @@ describe("Fetch Monster By ID Use Case", () => {
                 description: "teste",
                 image: 'url',
                 story: 'teste',
-                type_id: 1,
                 user_id: randomUUID()
             })
 

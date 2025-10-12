@@ -3,9 +3,15 @@ import { FastifyReply, FastifyRequest } from "fastify";
 
 export async function refresh(req: FastifyRequest, res: FastifyReply) {
 
+   try {
     await req.jwtVerify({
         onlyCookie: true
     })
+} catch (error) {
+    return res.status(401).send({
+        message: "Invalid or expired refresh token"
+    })
+}   
 
     const { sub } = req.user
 
