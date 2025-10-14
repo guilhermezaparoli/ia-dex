@@ -1,5 +1,6 @@
 import { ImageGenerationFailedError } from "@/usecases/error/ImageGenerationFailedError.js";
 import { MonsterNameAlreadyExistsError } from "@/usecases/error/monster-name-already-exists-error-copy.js";
+import { ContentPolicyViolationError } from "@/usecases/error/content-policy-violation-error.js";
 import { makeCreateMonsterUseCase } from "@/usecases/factories/make-create-monster.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { Types } from "@prisma/client";
@@ -48,6 +49,10 @@ export async function createMonster(req: FastifyRequest, res: FastifyReply) {
             return res.status(409).send({ message: error.message })
         }
 
+        if (error instanceof ContentPolicyViolationError) {
+            req.log.warn({ error: error.message }, 'Content policy violation');
+            return res.status(400).send({ message: error.message })
+        }
 
         if (error instanceof ImageGenerationFailedError) {
             req.log.error({ error: error.message }, 'Image generation failed');
