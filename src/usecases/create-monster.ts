@@ -12,7 +12,6 @@ import { StoryAndStatsGeneratorService } from "@/services/openIA/story-and-stats
 interface CreateMonsterUseCaseRequest {
     name: string
     description: string
-    story: string
     user_id: string
     types: Types[]
 }
@@ -30,7 +29,7 @@ export class CreateMonsterUseCase {
     ) { }
 
 
-    async execute({ story, name, types, user_id, description }: CreateMonsterUseCaseRequest): Promise<CreateMonsterUseCaseResponse> {
+    async execute({ name, types, user_id, description }: CreateMonsterUseCaseRequest): Promise<CreateMonsterUseCaseResponse> {
 
 
         const monsterAlreadyExists = await this.monstersRepository.findByName(name)
@@ -47,7 +46,7 @@ export class CreateMonsterUseCase {
         Do not include text, letters, numbers, or watermarks in the image.
         Focus only on the creature and its environment.
         `;
-        const storyPrompt = `Write a short origin story in portuguese for a monster named ${name}, types: ${types?.toString()}, described as: "${description} and ${story}".`;
+        const storyPrompt = `Write a short origin story in portuguese for a monster named ${name}, types: ${types?.toString()}, described as: "${description}".`;
 
       
         const [imageUrl, storyAndStats] = await Promise.all([

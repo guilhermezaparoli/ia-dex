@@ -10,7 +10,7 @@ export async function createMonster(req: FastifyRequest, res: FastifyReply) {
     const createMonsterSchema = z.object({
         name: z.string(),
         description: z.string(),
-        story: z.string(),
+        story: z.string().optional(),
         types: z.array(z.nativeEnum(Types))
     })
 
@@ -30,7 +30,6 @@ export async function createMonster(req: FastifyRequest, res: FastifyReply) {
         const { monster } = await createMonsterUserCase.execute({
             name,
             description,
-            story,
             types,
             user_id: req.user.sub
         })
