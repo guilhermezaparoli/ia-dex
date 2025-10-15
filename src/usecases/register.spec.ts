@@ -5,6 +5,7 @@ import { faker } from "@faker-js/faker"
 import { InMemoryUsersRepository } from "@/repositories/inMemoryRepositories/in-memory-users-repository.js";
 import { UserEmailAlreadyExistsError } from "./error/user-email-already-exists-error.js";
 import * as argon2 from "argon2"
+import { UserNameAlreadyExistsError } from "./error/user-name-already-exists.js";
 
 
 
@@ -39,16 +40,35 @@ describe("Register Use Case", async () => {
 
         await sut.execute({
             email,
-            name,
+            name: faker.person.firstName(),
             password
         })
 
 
         await expect(() => sut.execute({
             email,
-            name,
+            name: faker.person.firstName(),
             password
         })).rejects.instanceOf(UserEmailAlreadyExistsError)
+    })
+
+    it("should not be able to register with existent name", async () => {
+
+        const email = faker.internet.email()
+        const name = faker.person.firstName()
+        const password = faker.internet.password()
+
+        await sut.execute({
+            email,
+            name,
+            password
+        })
+
+        await expect(() => sut.execute({
+            email,
+            name,
+            password
+        })).rejects.instanceOf(UserNameAlreadyExistsError)
     })
 
     it("should create a password hash at register", async () => {
