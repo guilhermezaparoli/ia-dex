@@ -45,7 +45,7 @@ app.register(fastifyJwt, {
 })
 app.register(fastifyCookie)
 app.register(cors, {
-  origin: ["http://localhost:5173", "https://vite-ia-dex.vercel.app"],
+  origin: ["http://localhost:5173", "https://vite-ia-dex.vercel.app", "iadex.guilhermezaparoli.dev"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 })
