@@ -4,6 +4,7 @@ import { UserEmailAlreadyExistsError } from "./error/user-email-already-exists-e
 
 import * as argon2 from "argon2"
 import { User } from "@prisma/client"
+import { UserNameAlreadyExistsError } from "./error/user-name-already-exists.js"
 
 interface RegisterUseCaseRequest {
     email: string
@@ -24,6 +25,12 @@ export class RegisterUseCase {
     async execute({ email, password, name }: RegisterUseCaseRequest): Promise<RegisterUseCaseResponse> {
 
         const emailAlreadyInUse = await this.usersRepository.findByEmail(email)
+
+        const nameAlreadyInUse = await this.usersRepository.findByName(name)
+
+        if(nameAlreadyInUse){
+            throw new UserNameAlreadyExistsError()
+        }
 
         if(emailAlreadyInUse){
             throw new UserEmailAlreadyExistsError()
